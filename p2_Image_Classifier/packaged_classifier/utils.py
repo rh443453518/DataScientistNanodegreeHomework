@@ -132,8 +132,8 @@ def get_args_train():
                         help='learning rate, default 0.001')
     parser.add_argument('--hidden_units', type=int, default=500,
                         help='hidden units, default 500')
-    parser.add_argument('--print_every', type=int, default=40,
-                        help='print every iterations, default 40')    
+    parser.add_argument('--print_every', type=int, default=10,
+                        help='print every iterations, default 10')    
     parser.add_argument('--dropout_prob', type=int, default=0.1,
                         help='print every iterations, default 0.1')   
     parser.add_argument('--epochs', type=int, default=6,
