@@ -1,12 +1,31 @@
 import sys
-
+import pandas as pd
+import numpy as np
+from sqlalchemy import create_engine
 
 def load_data(messages_filepath, categories_filepath):
-    pass
+    msg_df = pd.read_csv(messages_filepath)
+    cat_df = pd.read_csv(categories_filepath)
+    df = pd.merge(msg_df, cat_df, on = 'id')
+    return df
 
 
 def clean_data(df):
-    pass
+    categories = df['categories'].str.split(';', expand=True)
+    row = categories.iloc[1]
+    category_colnames = row.apply(lambda x: x.split('-')[0])
+    categories.columns = category_colnames
+
+    # replace original values into 1 and 0
+    for column in categories:
+        categories[column] = categories[column].apply(lambda x: int(x.split('-')[1]))
+
+    # replace the old categories column
+    df.drop('categories', axis = 1, inplace = True)
+    df = df.join(categories)
+    # drop duplicates
+    df = df.drop_duplicates()
+    return df
 
 
 def save_data(df, database_filename):
