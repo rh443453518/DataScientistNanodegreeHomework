@@ -11,16 +11,16 @@ def load_data(messages_filepath, categories_filepath):
 
 
 def clean_data(df):
+    # create a dataframe of the 36 individual category columns
     categories = df['categories'].str.split(';', expand=True)
+    # select the first row of the categories dataframe
     row = categories.iloc[1]
     category_colnames = row.apply(lambda x: x.split('-')[0])
     categories.columns = category_colnames
-
-    # replace original values into 1 and 0
     for column in categories:
         categories[column] = categories[column].apply(lambda x: int(x.split('-')[1]))
 
-    # replace the old categories column
+    # concatenate the original dataframe with the new `categories` dataframe
     df.drop('categories', axis = 1, inplace = True)
     df = df.join(categories)
     # drop duplicates
@@ -29,8 +29,8 @@ def clean_data(df):
 
 
 def save_data(df, database_filename):
-    pass  
-
+    engine = create_engine('sqlite:///DisasterResponse.db')
+    df.to_sql('data/DisasterResponse', engine, index=False)
 
 def main():
     if len(sys.argv) == 4:

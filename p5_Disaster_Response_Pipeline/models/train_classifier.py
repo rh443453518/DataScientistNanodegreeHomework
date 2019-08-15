@@ -1,9 +1,32 @@
 import sys
+# import libraries
+import pandas as pd
+import numpy as np
+import pickle
+from sqlalchemy import create_engine
+
+import re
+import nltk
+nltk.download('wordnet')
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+from nltk.stem.wordnet import WordNetLemmatizer
+
+from sklearn.pipeline import Pipeline
+from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.multioutput import MultiOutputClassifier
+from sklearn.metrics import precision_score, recall_score, f1_score
+from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 
 
 def load_data(database_filepath):
-    pass
-
+    engine = create_engine('sqlite:///../data/DisasterResponse.db')
+    df = pd.read_sql_table('DisasterResponse', engine)
+    X = df['message']
+    Y = df.drop(['id', 'message', 'original', 'genre'], axis=1)
+    category_names = Y.columns
+    return X, Y, category_names
 
 def tokenize(text):
     pass
